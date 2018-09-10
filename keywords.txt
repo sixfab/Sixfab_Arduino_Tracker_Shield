@@ -1,0 +1,85 @@
+#######################################
+# Syntax Coloring Map For SixfabNBIoT
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SixfabGPRSIoT	KEYWORD1	
+DEBUG	KEYWORD1
+L96	KEYWORD1
+compose	KEYWORD1
+ip_address	KEYWORD1
+domain_name	KEYWORD1
+port_number	KEYWORD1
+timeout	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+enable	KEYWORD2
+disable	KEYWORD2
+powerUp	KEYWORD2
+getModemStatus	KEYWORD2
+sendATCommOnce	KEYWORD2
+sendATComm	KEYWORD2
+sendDataComm	KEYWORD2
+resetModule	KEYWORD2
+saveConfigurations	KEYWORD2
+getIMEI	KEYWORD2
+getFirmwareInfo	KEYWORD2
+getHardwareInfo	KEYWORD2
+getIPAddress	KEYWORD2
+setIPAddress	KEYWORD2
+getDomainName	KEYWORD2
+setDomainName	KEYWORD2
+getPort	KEYWORD2
+setPort	KEYWORD2
+getTimeout	KEYWORD2
+setTimeout	KEYWORD2
+getSignalQuality	KEYWORD2
+connectToOperator	KEYWORD2
+turnOnL96	KEYWORD2
+turnOffL96	KEYWORD2
+getFixedLocation	KEYWORD2 
+activateContext	KEYWORD2
+deactivateContext	KEYWORD2
+connectToServerTCP	KEYWORD2
+sendDataTCP	KEYWORD2
+startUDPService	KEYWORD2
+sendDataUDP	KEYWORD2
+closeConnection	KEYWORD2
+readAccel	KEYWORD2
+readTemp	KEYWORD2
+readHum	KEYWORD2
+readLux	KEYWORD2
+turnOnRelay	KEYWORD2
+turnOffRelay	KEYWORD2
+readUserButton	KEYWORD2
+turnOnUserLED	KEYWORD2
+turnOffUserLED	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+USER_BUTTON	LITERAL1
+USER_LED	LITERAL1
+M95_ENABLE	LITERAL1
+ALS_PT19_PIN	LITERAL1
+RELAY	LITERAL1
+M95_POWERKEY	LITERAL1
+STATUS	LITERAL1
+AP_READY	LITERAL1
+RING_INDICATOR	LITERAL1
+TIMEOUT	LITERAL1
+IP_ADDRESS_LEN	LITERAL1
+DOMAIN_NAME_LEN	LITERAL1
+PORT_NUMBER_LEN	LITERAL1
+AT_COMM_LEN	LITERAL1
+AT_RESPONSE_LEN	LITERAL1
+DATA_COMPOSE_LEN	LITERAL1
+DATA_LEN_LEN	LITERAL1
