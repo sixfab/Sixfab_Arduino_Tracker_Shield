@@ -1,11 +1,11 @@
 /*
-  localHost.ino - This is basic local host example.
-  Created by Yasin Kaya (selengalp), july 13, 2018.
+  sensorTest.ino - This is example of testing sensors.
+  Created by Yasin Kaya (selengalp), September 11, 2018.
 */
 
-#include "Sixfab_CellularIoT.h"
+#include "Sixfab_GPRSIoT.h"
 
-SixfabCellularIoT node;
+SixfabGPRSIoT node;
 
 double ax, ay, az;
 
