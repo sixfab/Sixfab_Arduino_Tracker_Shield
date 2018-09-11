@@ -42,9 +42,6 @@ getTimeout	KEYWORD2
 setTimeout	KEYWORD2
 getSignalQuality	KEYWORD2
 connectToOperator	KEYWORD2
-turnOnL96	KEYWORD2
-turnOffL96	KEYWORD2
-getFixedLocation	KEYWORD2 
 activateContext	KEYWORD2
 deactivateContext	KEYWORD2
 connectToServerTCP	KEYWORD2
