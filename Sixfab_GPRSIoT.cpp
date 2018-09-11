@@ -6,11 +6,11 @@
   Created by Yasin Kaya (selengalp), September 10, 2018.
 */
 
-#include "Sixfab_CellularIoT.h"
+#include "Sixfab_GPRSIoT.h"
 
 Sixfab_HDC1080 hdc1080;
 MMA8452Q accel; // I2C Address : 0x1C
-SoftwareSerial M95_AT(7,8); // RX, TX - 9600 baud rate 
+SoftwareSerial M95_AT(8,7); // RX, TX - 9600 baud rate 
 
 // default
 SixfabGPRSIoT::SixfabGPRSIoT()
@@ -41,13 +41,13 @@ void SixfabGPRSIoT::init()
   powerUp();  
 
   DEBUG.println("Module initializing");
+  delay(1000); // wait until module is ready 
 
   // HDC1080 begin
   hdc1080.begin(0x40);
   // mma8452q init 
   accel.init();
 
-  sendATComm("AT","RDY"); 
   sendATComm("ATE1","OK\r\n"); 
   sendATComm("ATE1","OK\r\n");
   sendATComm("AT","OK\r\n");
@@ -73,7 +73,7 @@ void SixfabGPRSIoT::powerUp()
   pinMode(M95_POWERKEY,OUTPUT);
   delay(10);
   digitalWrite(M95_POWERKEY,HIGH);
-  delay(500);
+  delay(1000);
   digitalWrite(M95_POWERKEY,LOW);
   // while(getModemStatus()){}
 }
@@ -263,7 +263,9 @@ const char* SixfabGPRSIoT::getSignalQuality()
 void SixfabGPRSIoT::connectToOperator()
 {
   DEBUG.println("Trying to connect base station of operator...");
+  setTimeout(5000);
   sendATComm("AT+CGATT=1","OK\r\n");
+  setTimeout(TIMEOUT);
   sendATComm("AT+CGATT?","+CGATT: 1\r\n");
   
   getSignalQuality(); 
@@ -272,26 +274,7 @@ void SixfabGPRSIoT::connectToOperator()
 /******************************************************************************************
  *** L96 Functions ***********************************************************************
  ******************************************************************************************/
-
-// Function for turning on L96
-void SixfabGPRSIoT::turnOnL96()
-{
-  sendATComm("AT+QGPS=1","OK\r\n");
-}
-
-
-// Function for turning of L96
-void SixfabGPRSIoT::turnOffL96()
-{
-  sendATComm("AT+QGPSEND","OK\r\n");
-}
-
-
-// Function for getting fixed location 
-const char* SixfabGPRSIoT::getFixedLocation()
-{
-  return sendATComm("AT+QGPSLOC?","+QGPSLOC:");
-} 
+// ------------------>> in development
 
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************
@@ -344,12 +327,10 @@ void SixfabGPRSIoT::sendDataTCP(const char *data)
 // function for connecting to server via UDP
 void SixfabGPRSIoT::startUDPService()
 {
-  char *port = "3005";
-
   strcpy(compose, "AT+QIOPEN=\"UDP\",\"");
   strcat(compose, ip_address);
   strcat(compose, "\",");
-  strcat(compose, port);
+  strcat(compose, port_number);
   
   sendATComm(compose,"OK\r\n");
   clear_compose();

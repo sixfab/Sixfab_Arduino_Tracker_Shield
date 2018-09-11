@@ -294,37 +294,10 @@ class SixfabGPRSIoT
     void connectToOperator();
 
 /******************************************************************************************
- *** GNSS Functions ***********************************************************************
+ *** L96 Functions ***********************************************************************
  ******************************************************************************************/
-
-    /*
-    Function for connecting to base station of operator
-
-    [no-return]
-    ---
-    [no-param]
-    */
-    void turnOnGNSS();
-
-    /*
-    Function for connecting to base station of operator
-
-    [no-return]
-    ---
-    [no-param]
-    */
-    void turnOffGNSS();
-
-    /*
-    Function for connecting to base station of operator
-
-    [return] : Fixed location. Lattitude and Longitude
-    ---
-    [no-param]
-    */
-    const char* getFixedLocation();   
-    
-
+// ------------------>> in development
+   
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************
  ******************************************************************************************/
