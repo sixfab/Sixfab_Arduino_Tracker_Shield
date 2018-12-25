@@ -42,8 +42,6 @@ extern SoftwareSerial M95_AT;
 #define M95_ENABLE 4
 #define L96_STANDBY 3
 #define L96_RESET 2
-#define ALS_PT19_PIN A1
-#define RELAY A0
 #define M95_POWERKEY A2 
 #define VDD_EXT A3 
 
@@ -369,63 +367,6 @@ class SixfabGPRSIoT
 /******************************************************************************************
  *** Peripheral Devices' Functions : Read sensors - Set Relay and LEDs ********************
  ******************************************************************************************/    
-    
-    /* 
-    Function for reading accelerometer values.
-    
-    [no-return]
-    ---
-    [param #1] : double* acceleration on x plane
-    [param #2] : double* acceleration on y plane
-    [param #y] : double* acceleration on z plane
-    */
-    void readAccel(double*, double*, double*);
-
-    /* 
-    Function for reading temperature.
-    
-    [return] : double temperature  (celcius)
-    ---
-    [no-param]
-    */
-    double readTemp();
-
-    /* 
-    Function for reading humidity.
-    
-    [return] : double humidity %x
-    ---
-    [no-param]
-    */
-    double readHum();
-
-    /* 
-    Function for reading raw adc data from light sensor.
-    
-    [return] : double light adc 0-1023
-    ---
-    [no-param]
-    */
-    double readLux();
-
-    /* 
-    Function for turning on relay.
-    
-    [no-return]
-    ---
-    [no-param]
-    */
-    void turnOnRelay();
-
-    /* 
-    Function for turning off relay.
-    
-    [no-return]
-    ---
-    [no-param]
-    */
-    void turnOffRelay();
-
     /* 
     Function for reading button position.
     

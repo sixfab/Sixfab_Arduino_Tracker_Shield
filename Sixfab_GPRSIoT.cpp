@@ -8,8 +8,6 @@
 
 #include "Sixfab_GPRSIoT.h"
 
-Sixfab_HDC1080 hdc1080;
-MMA8452Q accel; // I2C Address : 0x1C
 SoftwareSerial M95_AT(8,7); // RX, TX - 9600 baud rate 
 
 // default
@@ -27,26 +25,22 @@ void SixfabGPRSIoT::init()
 {
   // setting pin directions
   pinMode(USER_LED, OUTPUT);
-  pinMode(RELAY, OUTPUT);
   pinMode(USER_BUTTON, INPUT);
-  pinMode(ALS_PT19_PIN, INPUT);
+
   
+  disable();
+  delay(1000);
   enable();
 
   // setting serials
   M95_AT.begin(9600);
   DEBUG.begin(115200);
-  L96.begin(115200);
+  //L96.begin(115200);
 
   powerUp();  
 
   DEBUG.println("Module initializing");
   delay(1000); // wait until module is ready 
-
-  // HDC1080 begin
-  hdc1080.begin(0x40);
-  // mma8452q init 
-  accel.init();
 
   sendATComm("ATE1","OK\r\n"); 
   sendATComm("ATE1","OK\r\n");
@@ -75,15 +69,18 @@ void SixfabGPRSIoT::powerUp()
   digitalWrite(M95_POWERKEY,HIGH);
   delay(1000);
   digitalWrite(M95_POWERKEY,LOW);
-  // while(getModemStatus()){}
+  
+  while(getModemStatus()){
+    DEBUG.println(getModemStatus());
+  }
 }
 
 // power up or down M95 module
 uint8_t SixfabGPRSIoT::getModemStatus()
 {
-  pinMode(STATUS,INPUT);
+  pinMode(VDD_EXT,INPUT);
   delay(10);
-  return digitalRead(STATUS);
+  return digitalRead(VDD_EXT);
 }
 
 // send at comamand to module
@@ -263,7 +260,8 @@ const char* SixfabGPRSIoT::getSignalQuality()
 void SixfabGPRSIoT::connectToOperator()
 {
   DEBUG.println("Trying to connect base station of operator...");
-  setTimeout(5000);
+  setTimeout(3000);
+  sendATComm("AT+CGATT=0","OK\r\n");
   sendATComm("AT+CGATT=1","OK\r\n");
   setTimeout(TIMEOUT);
   sendATComm("AT+CGATT?","+CGATT: 1\r\n");
@@ -362,49 +360,10 @@ void SixfabGPRSIoT::closeConnection()
  *** Peripheral Devices' Functions : Read sensors - Set Relay and LEDs ********************
  ******************************************************************************************/  
 
-// 
-void SixfabGPRSIoT::readAccel(double* ax, double* ay, double* az)
-{
-  accel.read();
-  *ax = accel.cx;
-  *ay = accel.cy;
-  *az = accel.cz;
-}
-
-//
-double SixfabGPRSIoT::readTemp()
-{
-  return hdc1080.readTemperature();
-}
-
-// 
-double SixfabGPRSIoT::readHum()
-{
-  return hdc1080.readHumidity();
-}
-
-//
-double SixfabGPRSIoT::readLux()
-{
-  return analogRead(ALS_PT19_PIN);
-}
-
-//
-void SixfabGPRSIoT::turnOnRelay()
-{
-  digitalWrite(RELAY, HIGH);
-}
-
-//
-void SixfabGPRSIoT::turnOffRelay()
-{ 
-  digitalWrite(RELAY, LOW);
-}
-
 //
 uint8_t SixfabGPRSIoT::readUserButton()
 {
-  digitalRead(USER_BUTTON);
+  return digitalRead(USER_BUTTON);
 }
 
 //
