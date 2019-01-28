@@ -39,11 +39,11 @@ extern SoftwareSerial M95_AT;
 // Peripheral Pin Definations
 #define USER_BUTTON 9
 #define USER_LED 6
-#define M95_ENABLE 4
+#define ENABLE 4
 #define L96_STANDBY 3
 #define L96_RESET 2
 #define M95_POWERKEY A2 
-#define VDD_EXT A3 
+#define STATUS A3 
 
 // Constants  
 #define TIMEOUT 1000
@@ -128,6 +128,15 @@ class SixfabGPRSIoT
     [param #1] : const char* AT command word
     */
     void sendATCommOnce(const char *);
+
+    /*
+    Function for getting response from modem
+    
+    [no-return]
+    ---
+    [param #1] : const char* Desired response
+    */
+    const char* getResponse(const char *);
 
     /*
     Function for sending AT [param #1] command to M95. If the desired [param #2] 
@@ -294,7 +303,15 @@ class SixfabGPRSIoT
 /******************************************************************************************
  *** L96 Functions ***********************************************************************
  ******************************************************************************************/
-// ------------------>> in development
+    /* 
+    function for getting raw nmea messages 
+
+    [return] char
+    ---
+    [no-param]
+    */ 
+    char getRawCharFromL96();
+
    
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************

@@ -35,7 +35,7 @@ void SixfabGPRSIoT::init()
   // setting serials
   M95_AT.begin(9600);
   DEBUG.begin(115200);
-  //L96.begin(115200);
+  L96.begin(115200);
 
   powerUp();  
 
@@ -50,15 +50,15 @@ void SixfabGPRSIoT::init()
 // power up M95 module and all peripherals from voltage regulator 
 void SixfabGPRSIoT::enable()
 {
-  pinMode(M95_ENABLE, OUTPUT);
-  digitalWrite(M95_ENABLE,HIGH);
+  pinMode(ENABLE, OUTPUT);
+  digitalWrite(ENABLE,HIGH);
 }
 
 // power down M95 module and all peripherals from voltage regulator 
 void SixfabGPRSIoT::disable()
 {
-  pinMode(M95_ENABLE, OUTPUT);
-  digitalWrite(M95_ENABLE,LOW);
+  pinMode(ENABLE, OUTPUT);
+  digitalWrite(ENABLE,LOW);
 }
 
 // power up or down M95 module
@@ -67,20 +67,20 @@ void SixfabGPRSIoT::powerUp()
   pinMode(M95_POWERKEY,OUTPUT);
   delay(10);
   digitalWrite(M95_POWERKEY,HIGH);
-  delay(1000);
-  digitalWrite(M95_POWERKEY,LOW);
   
   while(getModemStatus()){
-    DEBUG.println(getModemStatus());
+    // DEBUG.println(getModemStatus());
   }
+
+  digitalWrite(M95_POWERKEY,LOW);
 }
 
 // power up or down M95 module
 uint8_t SixfabGPRSIoT::getModemStatus()
 {
-  pinMode(VDD_EXT,INPUT);
+  pinMode(STATUS,INPUT);
   delay(10);
-  return digitalRead(VDD_EXT);
+  return digitalRead(STATUS);
 }
 
 // send at comamand to module
@@ -89,6 +89,28 @@ void SixfabGPRSIoT::sendATCommOnce(const char *comm)
   M95_AT.print(comm);
   M95_AT.print("\r");
   //DEBUG.println(comm);
+}
+
+// get response from modem
+const char* SixfabGPRSIoT::getResponse(const char *desired_reponse)
+{
+  char response[AT_RESPONSE_LEN]; // module response for AT commands.
+  char c;
+  int i = 0;
+  while(1){
+    while(M95_AT.available()){
+        c = M95_AT.read();
+        DEBUG.write(c);
+        response[i++]=c;
+        delay(2);
+        }
+
+    if(strstr(response, desired_reponse)){
+      return response;
+      memset(response, 0 , strlen(response));
+      break;
+    }
+  }
 }
 
 // function for sending at command to M95_AT.
@@ -165,9 +187,9 @@ void SixfabGPRSIoT::resetModule()
   saveConfigurations();
   delay(200);
 
-  digitalWrite(M95_ENABLE,LOW);
+  digitalWrite(ENABLE,LOW);
   delay(200);
-  digitalWrite(M95_ENABLE,HIGH);
+  digitalWrite(ENABLE,HIGH);
   delay(200);
 
   powerUp();
@@ -261,18 +283,19 @@ void SixfabGPRSIoT::connectToOperator()
 {
   DEBUG.println("Trying to connect base station of operator...");
   setTimeout(3000);
-  sendATComm("AT+CGATT=0","OK\r\n");
-  sendATComm("AT+CGATT=1","OK\r\n");
-  setTimeout(TIMEOUT);
-  sendATComm("AT+CGATT?","+CGATT: 1\r\n");
-  
+
+  sendATComm("AT+CGREG?","+CGREG: 0,1\r\n");
   getSignalQuality(); 
 }
 
 /******************************************************************************************
  *** L96 Functions ***********************************************************************
  ******************************************************************************************/
-// ------------------>> in development
+// function for getting raw nmea messages
+char getRawCharFromL96()
+{
+  return L96.read();
+}
 
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************
