@@ -51,25 +51,25 @@ void SixfabGPRSIoT::init()
 void SixfabGPRSIoT::enable()
 {
   pinMode(ENABLE, OUTPUT);
-  digitalWrite(ENABLE,HIGH);
+  digitalWrite(ENABLE,LOW);
 }
 
 // power down M95 module and all peripherals from voltage regulator 
 void SixfabGPRSIoT::disable()
 {
   pinMode(ENABLE, OUTPUT);
-  digitalWrite(ENABLE,LOW);
+  digitalWrite(ENABLE,HIGH);
 }
 
 // power up or down M95 module
 void SixfabGPRSIoT::powerUp()
 {
   pinMode(M95_POWERKEY,OUTPUT);
-  delay(10);
+  delay(100);
   digitalWrite(M95_POWERKEY,HIGH);
   
   while(getModemStatus()){
-    // DEBUG.println(getModemStatus());
+    DEBUG.println(getModemStatus());
   }
 
   digitalWrite(M95_POWERKEY,LOW);
@@ -88,7 +88,7 @@ void SixfabGPRSIoT::sendATCommOnce(const char *comm)
 {
   M95_AT.print(comm);
   M95_AT.print("\r");
-  //DEBUG.println(comm);
+  DEBUG.println(comm);
 }
 
 // get response from modem

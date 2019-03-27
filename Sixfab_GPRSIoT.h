@@ -39,11 +39,13 @@ extern SoftwareSerial M95_AT;
 // Peripheral Pin Definations
 #define USER_BUTTON 9
 #define USER_LED 6
-#define ENABLE 4
-#define L96_STANDBY 3
+#define FORCE_ON 4
+#define GEO_FENCE 3
 #define L96_RESET 2
-#define M95_POWERKEY A2 
-#define STATUS A3 
+#define M95_POWERKEY A3 
+#define STATUS A2 
+#define ENABLE A1
+#define THREE_D_FIX A0 
 
 // Constants  
 #define TIMEOUT 1000
