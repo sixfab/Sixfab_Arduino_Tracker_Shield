@@ -69,7 +69,7 @@ void SixfabGPRSIoT::powerUp()
   digitalWrite(M95_POWERKEY,HIGH);
   
   while(getModemStatus()){
-    DEBUG.println(getModemStatus());
+    //DEBUG.println(getModemStatus());
   }
 
   digitalWrite(M95_POWERKEY,LOW);
@@ -386,7 +386,8 @@ void SixfabGPRSIoT::closeConnection()
 //
 uint8_t SixfabGPRSIoT::readUserButton()
 {
-  return digitalRead(USER_BUTTON);
+  return digitalRead(USER_BUTTON);	
+  // LOW when pressed
 }
 
 //
