@@ -187,9 +187,9 @@ void SixfabGPRSIoT::resetModule()
   saveConfigurations();
   delay(200);
 
-  digitalWrite(ENABLE,LOW);
-  delay(200);
   digitalWrite(ENABLE,HIGH);
+  delay(200);
+  digitalWrite(ENABLE,LOW);
   delay(200);
 
   powerUp();
