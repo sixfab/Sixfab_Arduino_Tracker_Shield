@@ -3,9 +3,9 @@
   Created by Yasin Kaya (selengalp), September 11, 2018.
 */
 
-#include "Sixfab_GPRSIoT.h"
+#include "Sixfab_Tracker.h"
 
-SixfabGPRSIoT node;
+SixfabTracker node;
 
 char your_ip[] = "xx.xx.xx.xx"; // change with your ip
 char your_port[] = "xxxx"; // change with your port
