@@ -18,13 +18,12 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <Wire.h>
 #include <SoftwareSerial.h>
 
 // determine board type
 // Arduino Geniuno / Uno or Mega
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-  #define L96 Serial // 115200 baud rate
+  #define L96 Serial // 9600 baud rate
   #define DEBUG Serial // 115200 baud rate
 // Tinylab, Arduino Leonardo or Micro  
 #elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
@@ -32,7 +31,7 @@
   #define DEBUG Serial // 115200 baud rate
 #endif
 
-extern SoftwareSerial M95_AT;
+extern SoftwareSerial M95_AT;   //9600 baudrate
 
 // Peripheral Pin Definations
 #define USER_BUTTON 9
