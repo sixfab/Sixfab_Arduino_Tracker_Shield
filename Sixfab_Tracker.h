@@ -57,7 +57,7 @@ extern SoftwareSerial M95_AT;   //9600 baudrate
 class SixfabTracker
 {
   public:
-
+    
     /*
     Default constructer with no parameter
 
@@ -278,6 +278,14 @@ class SixfabTracker
     void setTimeout(uint16_t);
 
 /******************************************************************************************
+ *** SIM Related commands Functions ************************************************************
+ ******************************************************************************************/ 
+
+
+    const char* showICCID(void);
+    const char* simStatus(void);
+
+/******************************************************************************************
  *** Network Service Functions ************************************************************
  ******************************************************************************************/ 
 
@@ -299,8 +307,11 @@ class SixfabTracker
     */
     void connectToOperator();
 
+    void checkOperator();
+    void sendSMS(const char *, const char *);
+
 /******************************************************************************************
- *** L96 Functions ***********************************************************************
+ *** L96 GNSS Functions ***********************************************************************
  ******************************************************************************************/
     /* 
     function for getting raw nmea messages 
@@ -311,7 +322,23 @@ class SixfabTracker
     */ 
     char getRawCharFromL96();
     
-   
+      /* 
+    function for getting raw nmea sentence 
+
+    [return] String
+    ---
+    [no-param]
+    */ 
+    String getNmeaSentence(void);
+      /* 
+    function for checking the 3D Fix 
+
+    [return] bool
+    ---
+    [no-param]
+    */ 
+
+    bool is3DFixed(void);
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************
  ******************************************************************************************/
@@ -418,7 +445,7 @@ class SixfabTracker
     char domain_name[DOMAIN_NAME_LEN]; // domain name   
     char port_number[PORT_NUMBER_LEN]; // port number 
     uint16_t timeout = TIMEOUT; // default timeout for function and methods on this library.
-
+    String gps;
 /******************************************************************************************
  *** Private Functions that be used in public methods, in order to ease the operations ****
  ******************************************************************************************/

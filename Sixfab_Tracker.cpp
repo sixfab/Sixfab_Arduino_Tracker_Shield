@@ -35,11 +35,11 @@ void SixfabTracker::init()
   enable();
 
   // setting serials
-  M95_AT.begin(9600);
-  DEBUG.begin(115200);
-  L96.begin(9600);
+  M95_AT.begin(9600);   // Communication with M95 module
+  DEBUG.begin(115200);  // Serial Monitor
+  L96.begin(9600);      // L96 GNSS module communication
 
-  powerUp();  
+  powerUp();          //Power Up the M95 module
 
   DEBUG.println("Module initializing");
   delay(1000); // wait until module is ready 
@@ -81,8 +81,8 @@ uint8_t SixfabTracker::getModemStatus()
 // send at comamand to module
 void SixfabTracker::sendATCommOnce(const char *comm)
 {
-  M95_AT.print(comm);
-  M95_AT.print("\r");
+  M95_AT.println(comm);
+  //M95_AT.print("\r");
   //DEBUG.println(comm);
 }
 
@@ -117,13 +117,16 @@ const char* SixfabTracker::sendATComm(const char *command, const char *desired_r
   memset(response, 0 , AT_RESPONSE_LEN);
   M95_AT.flush();
 
-  sendATCommOnce(command);
+  //sendATCommOnce(command);
  
   timer = millis();
+  int count = 0;
    while(true){
     if(millis()-timer > timeout){
       sendATCommOnce(command);
       timer = millis();
+      count++; 
+      if (count == 4) break;
     }
     char c;
     int i = 0; 
@@ -164,10 +167,12 @@ const char* SixfabTracker::sendDataComm(const char *command, const char *desired
 
     while(M95_AT.available()){
       c = M95_AT.read();
-      DEBUG.write(c);
+      //DEBUG.print(c);
       response[i++]=c;
       delay(2);
       }
+
+      DEBUG.print(response);
       if(strstr(response, desired_reponse)){
         return response;
         memset(response, 0 , strlen(response));
@@ -179,9 +184,6 @@ const char* SixfabTracker::sendDataComm(const char *command, const char *desired
 // function for reset M95_AT module
 void SixfabTracker::resetModule()
 {
-  saveConfigurations();
-  delay(200);
-
   digitalWrite(ENABLE,HIGH);
   delay(200);
   digitalWrite(ENABLE,LOW);
@@ -261,6 +263,22 @@ void SixfabTracker::setTimeout(uint16_t new_timeout)
 {
   timeout = new_timeout; 
 }
+/******************************************************************************************
+ *** SIM Related commands Functions ************************************************************
+ ******************************************************************************************/ 
+
+//
+const char* SixfabTracker::showICCID(void)
+{
+  return sendATComm("AT+QCCID","OK");
+
+}
+
+const char* SixfabTracker::simStatus(void)
+{
+  return sendATComm("AT+CPIN?","OK");
+}
+
 
 
 /******************************************************************************************
@@ -279,19 +297,64 @@ void SixfabTracker::connectToOperator()
   DEBUG.println("Trying to connect base station of operator...");
   setTimeout(3000);
 
-  sendATComm("AT+CGREG?","+CGREG: 0,1\r\n");
-  getSignalQuality(); 
+  sendATComm("AT+CGREG?","+CGREG:");
+  
 }
 
+  void SixfabTracker::checkOperator(void)
+{
+    sendATComm("AT+COPS?","OK");
+
+}
+void SixfabTracker::sendSMS(const char *phoneNum,const char *message)
+{
+  sendATComm("AT+CMGF=1","OK"); //set SMS format to text mode
+  //sendATComm("AT+CSMP=17,167,0,0","OK"); //set SMS text mode parameters
+  sendATComm("AT+CSCS=\"GSM\"","OK");
+  
+  strcpy(compose, "AT+CMGS=\"");
+  strcat(compose, phoneNum);
+  strcat(compose, "\"");
+ 
+  sendATComm(compose,">");
+  clear_compose();
+
+  M95_AT.print(message);
+delay(500);
+  M95_AT.print((char)26);
+
+
+  delay(500);
+
+  //sendATComm("AT+QISTATE","OK\r\n");
+
+
+
+}
+
+
 /******************************************************************************************
- *** L96 Functions ***********************************************************************
+ *** L96 GNSS Functions ***********************************************************************
  ******************************************************************************************/
 // function for getting raw nmea messages
 char SixfabTracker::getRawCharFromL96()
 {
   return L96.read();
 }
-
+// function for getting raw nmea sentence
+String SixfabTracker::getNmeaSentence(void)
+{
+  gps = L96.readStringUntil(13);
+  gps.trim();     //reads characters from the Serial Buffer into a String until Carriage Return (ascii: 13)
+  return gps;
+    
+}
+// function for checking the 3D Fix
+bool SixfabTracker::is3DFixed(void)
+{
+  if (digitalRead(THREE_D_FIX) == 0) return true;
+  else return false ;
+}
 /******************************************************************************************
  *** TCP & UDP Protocols Functions ********************************************************
  ******************************************************************************************/
